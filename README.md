@@ -11,7 +11,7 @@
 
 ## Topologi
 
-![](topologi.png)
+![alt text](assets/topologi.png)
 
 ## Konfigurasi
 
