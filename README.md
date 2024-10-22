@@ -11,7 +11,7 @@
 
 ## Topologi
 
--
+![](topologi.png)
 
 ## Konfigurasi
 
@@ -23,22 +23,22 @@ iface eth0 inet dhcp
 
 auto eth1
 iface eth1 inet static
-	address 10.74.1.0
+	address 10.74.1.1
 	netmask 255.255.255.0
 
 auto eth2
 iface eth2 inet static
-	address 10.74.2.0
+	address 10.74.2.1
 	netmask 255.255.255.0
 
 auto eth3
 iface eth3 inet static
-	address 10.74.3.0
+	address 10.74.3.1
 	netmask 255.255.255.0
 
 auto eth4
 iface eth4 inet static
-	address 10.74.4.0
+	address 10.74.4.1
 	netmask 255.255.255.0
 ```
 
