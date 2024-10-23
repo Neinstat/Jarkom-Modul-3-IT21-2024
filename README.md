@@ -269,6 +269,7 @@ Jauh sebelum perang dimulai, ternyata para keluarga bangsawan, Tybur dan Fritz, 
 
 Seiring berjalannya waktu kondisi semakin memanas, untuk bersiap perang. Kaum Eldia melakukan deployment sebagai berikut
 |Image |
+|--|
 |danielcristh0/debian-buster:1.1|
 
 ## No 6-12
