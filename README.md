@@ -373,7 +373,7 @@ Seiring berjalannya waktu kondisi semakin memanas, untuk bersiap perang. Kaum El
 
 **Script DHCP Server - dhcpserv.sh (Tybur)**
 
-```
+```bash
 echo '
 INTERFACESv4="eth0"
 INTERFACESv6=""
@@ -414,7 +414,7 @@ service isc-dhcp-server restart
 
 **Script DHCP Relay - dhcpserv.sh (Tybur)**
 
-```
+```bash
 echo '
 SERVERS="10.74.4.2"
 INTERFACES="eth1 eth2 eth3 eth4"
@@ -436,7 +436,7 @@ service isc-dhcp-relay restart
 
 ### Penyelesaian
 
-```
+```bash
 ```
 
 ### No 7
@@ -445,7 +445,7 @@ service isc-dhcp-relay restart
 
 ### Penyelesaian
 
-```
+```bash
 ```
 
 ### No 8
@@ -458,7 +458,7 @@ service isc-dhcp-relay restart
 
 ### Penyelesaian
 
-```
+```bash
 ```
 
 ### No 9
@@ -467,7 +467,7 @@ service isc-dhcp-relay restart
 
 ### Penyelesaian
 
-```
+```bash
 ```
 
 ### No 10
@@ -476,7 +476,7 @@ service isc-dhcp-relay restart
 
 ### Penyelesaian
 
-```
+```bash
 ```
 
 ### No 11
@@ -486,7 +486,7 @@ hint: (proxy_pass)
 
 ### Penyelesaian
 
-```
+```bash
 ```
 
 ### No 12
@@ -497,7 +497,7 @@ hint: (fixed in dulu clientnya)
 
 ### Penyelesaian
 
-```
+```bash
 ```
 
 ## No 13-20
