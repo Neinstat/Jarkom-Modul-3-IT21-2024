@@ -29,6 +29,26 @@
 
 ## Konfigurasi
 
+| **Name**      | **Interface** | **Address**   | **Netmask**        | **Gateway**   | **Configuration Type** |
+|---------------|---------------|---------------|--------------------|--------------|------------------------|
+| **Paradis**   | eth0          | -             | -                  | -            | DHCP                   |
+|               | eth1          | 10.74.1.1     | 255.255.255.0      | -            | Static                 |
+|               | eth2          | 10.74.2.1     | 255.255.255.0      | -            | Static                 |
+|               | eth3          | 10.74.3.1     | 255.255.255.0      | -            | Static                 |
+|               | eth4          | 10.74.4.1     | 255.255.255.0      | -            | Static                 |
+| **Annie**     | eth0          | 10.74.1.2     | 255.255.255.0      | 10.74.1.1    | Static                 |
+| **Berthold**  | eth0          | 10.74.1.3     | 255.255.255.0      | 10.74.1.1    | Static                 |
+| **Reiner**    | eth0          | 10.74.1.4     | 255.255.255.0      | 10.74.1.1    | Static                 |
+| **Armin**     | eth0          | 10.74.2.2     | 255.255.255.0      | 10.74.2.1    | Static                 |
+| **Eren**      | eth0          | 10.74.2.3     | 255.255.255.0      | 10.74.2.1    | Static                 |
+| **Mikasa**    | eth0          | 10.74.2.4     | 255.255.255.0      | 10.74.2.1    | Static                 |
+| **Beast**     | eth0          | 10.74.3.2     | 255.255.255.0      | 10.74.3.1    | Static                 |
+| **Colossal**  | eth0          | 10.74.3.3     | 255.255.255.0      | 10.74.3.1    | Static                 |
+| **Warhammer** | eth0          | 10.74.3.4     | 255.255.255.0      | 10.74.3.1    | Static                 |
+| **Fritz**     | eth0          | 10.74.4.2     | 255.255.255.0      | 10.74.4.1    | Static                 |
+| **Tybur**     | eth0          | 10.74.4.3     | 255.255.255.0      | 10.74.4.1    | Static                 |
+| **Zeke & Erwin** | eth0       | -             | -                  | -            | DHCP                   |
+
 **Paradis**
 ```
 # DHCP config for eth0
@@ -243,6 +263,52 @@ Pulau Paradis dan Marley, sama-sama menghadapi ancaman besar dari satu sama lain
 Bangsa Marley, dipimpin oleh Zeke, telah mempersiapkan Annie, Bertholdt, dan Reiner untuk menyerang menggunakan Laravel Worker. Di sisi lain, Klan Eldia dari Paradis telah mempersiapkan Armin, Eren, dan Mikasa sebagai PHP Worker untuk mempertahankan pulau tersebut. Warhammer bertindak sebagai Database Server, sementara Beast dan Colossal sebagai Load Balancer. 
 
 Pulau Paradis telah menjadi tempat yang damai selama 1000 tahun, namun kedamaian tersebut tidak bertahan selamanya. Perang antara kaum Marley dan Eldia telah mencapai puncak. Kaum Marley yang dipimpin oleh Zeke, me-register domain name marley.yyy.com untuk worker Laravel mengarah pada Annie. Namun ternyata tidak hanya kaum Marley saja yang berinisiasi, kaum Eldia ternyata sudah mendaftarkan domain name eldia.yyy.com untuk worker PHP (0) mengarah pada Armin.
+
+**Script DNS Server - dnsserv.sh (Fritz)**
+
+```bash
+echo 'zone "marley.it21.com" { 
+        type master; 
+        file "/etc/bind/jarkom/marley.it21.com";
+};
+
+zone "eldia.it21.com" {
+        type master;
+        file "/etc/bind/jarkom/eldia.it21.com";
+}; ' >> /etc/bind/named.conf.local
+
+mkdir /etc/bind/jarkom
+
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     marley.it21.com. root.marley.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      marley.it21.com.
+@       IN      A       192.246.1.2     ; IP Annie' > /etc/bind/jarkom/marley.it21.com
+
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     eldia.it21.com. root.eldia.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      eldia.it21.com.
+@       IN      A       192.246.2.2     ; IP Armin' > /etc/bind/jarkom/eldia.it21.com
+
+service bind9 restart
+```
 
 ## No 1-5
 
