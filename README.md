@@ -190,7 +190,8 @@ iface eth0 inet static
 	gateway 10.74.3.1
 ```
 
-**Tybur (DHCP Server)**
+**Fritz (DNS Server)**
+
 ```
 auto eth0
 iface eth0 inet static
@@ -199,7 +200,8 @@ iface eth0 inet static
 	gateway 10.74.4.1
 ```
 
-**Fritz (DNS Server)**
+**Tybur (DHCP Server)**
+
 ```
 auto eth0
 iface eth0 inet static
@@ -264,7 +266,7 @@ service nginx start
 ```
 echo 'nameserver 10.74.4.2' > /etc/resolv.conf
 apt-get update
-apt-get install lynx wget unzip nginx software-properties-common php7.3 php7.3-fpm -y
+apt-get install lynx curl unzip nginx software-properties-common php7.3 php7.3-fpm -y
 ```
 
 **Zeke & Erwin (Client)**
@@ -416,7 +418,7 @@ service isc-dhcp-server restart
 
 ```bash
 echo '
-SERVERS="10.74.4.2"
+SERVERS="10.74.4.3"
 INTERFACES="eth1 eth2 eth3 eth4"
 OPTIONS=""
 ' > /etc/default/isc-dhcp-relay
@@ -428,6 +430,8 @@ net.ipv4.ip_forward=1
 service isc-dhcp-relay restart
 ```
 
+![alt text](assets/no1-5.png)
+
 ## No 6-12
 
 ### No 6
@@ -436,8 +440,49 @@ service isc-dhcp-relay restart
 
 ### Penyelesaian
 
+**Script PHP Worker - phpworker.sh (Armin, Eren, Mikasa)**
+
 ```bash
+service nginx start
+service php7.3-fpm start
+
+mkdir -p /var/www/eldia.it21.com
+
+curl -L -o bangsaEldia.zip 'https://drive.google.com/uc?export=download&id=1TvebIeMQjRjFURKVtA32lO9aL7U2msd6' -k
+unzip -o bangsaEldia.zip -d /var/www/eldia.it21.com
+
+cp /etc/nginx/sites-available/default /etc/nginx/sites-available/eldia.it21.com
+ln -s /etc/nginx/sites-available/eldia.it21.com /etc/nginx/sites-enabled/
+rm /etc/nginx/sites-enabled/default
+
+echo '
+server {
+  listen 80;
+  listen [::]:80;
+
+  root /var/www/eldia.it21.com;
+  index index.php index.html index.htm;
+
+  server_name eldia.it21.com;
+
+  location / {
+    try_files $uri $uri/ =404;
+  }
+
+  location ~ \.php$ {
+    include snippets/fastcgi-php.conf;
+    fastcgi_pass unix:/var/run/php/php7.3-fpm.sock;
+  }
+
+  location ~ /\.ht {
+    deny all;
+  }
+}' > /etc/nginx/sites-available/eldia.it21.com
+
+service nginx restart
 ```
+
+![alt text](assets/no6.png)
 
 ### No 7
 
@@ -509,7 +554,7 @@ Melihat perlawanan yang sengit dari kaum eldia, kaum marley pun memutar otak dan
 
 ### Penyelesaian
 
-```
+```bash
 ```
 
 ### No 14
@@ -518,7 +563,7 @@ Melihat perlawanan yang sengit dari kaum eldia, kaum marley pun memutar otak dan
 
 ### Penyelesaian
 
-```
+```bash
 ```
 
 ### No 15
@@ -528,17 +573,11 @@ Melihat perlawanan yang sengit dari kaum eldia, kaum marley pun memutar otak dan
 
 ### Penyelesaian
 
-```
-```
-
 ### No 16
 
 - POST /auth/login (16)
 
 ### Penyelesaian
-
-```
-```
 
 ### No 17
 
@@ -546,16 +585,13 @@ Melihat perlawanan yang sengit dari kaum eldia, kaum marley pun memutar otak dan
 
 ### Penyelesaian
 
-```
-```
-
 ### No 18
 
 4. Setelah Annie berhasil kabur dari SurveyCorps, Annie kembali ke Reiner dan Bertholdt. Untuk memastikan ketiganya bekerja sama secara baik untuk mengatur Marley Channel maka implementasikan Proxy Bind pada Beast untuk mengaitkan IP dari Annie, Reiner, dan Berthold. (18)
 
 ### Penyelesaian
 
-```
+```bash
 ```
 
 ### No 19
@@ -569,7 +605,7 @@ sebanyak tiga percobaan dan lakukan testing sebanyak 150 request dengan 15 reque
 
 ### Penyelesaian
 
-```
+```bash
 ```
 
 ### No 20
@@ -581,6 +617,3 @@ PS:
 yyy merupakan kode kelompok
 
 ### Penyelesaian
-
-```
-```
