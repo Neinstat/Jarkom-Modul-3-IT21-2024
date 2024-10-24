@@ -101,7 +101,7 @@ iface eth0 inet static
 	gateway 10.74.2.1
 ```
 
-Mikasa
+**Mikasa**
 ```
 auto eth0
 iface eth0 inet static
@@ -110,7 +110,7 @@ iface eth0 inet static
 	gateway 10.74.2.1
 ```
 
-Beast
+**Beast**
 ```
 auto eth0
 iface eth0 inet static
@@ -119,7 +119,7 @@ iface eth0 inet static
 	gateway 10.74.3.1
 ```
 
-Colossal
+**Colossal**
 ```
 auto eth0
 iface eth0 inet static
@@ -128,7 +128,7 @@ iface eth0 inet static
 	gateway 10.74.3.1
 ```
 
-Warhammer
+**Warhammer**
 ```
 auto eth0
 iface eth0 inet static
@@ -137,7 +137,7 @@ iface eth0 inet static
 	gateway 10.74.3.1
 ```
 
-Fritz
+**Fritz**
 ```
 auto eth0
 iface eth0 inet static
@@ -146,7 +146,7 @@ iface eth0 inet static
 	gateway 10.74.4.1
 ```
 
-Tybur
+**Tybur**
 ```
 auto eth0
 iface eth0 inet static
@@ -155,7 +155,7 @@ iface eth0 inet static
 	gateway 10.74.4.1
 ```
 
-Zeke & Erwin
+**Zeke & Erwin**
 ```
 auto eth0
 iface eth0 inet dhcp
@@ -212,16 +212,13 @@ Beast & Colossal (Load Balancer)
 ```
 echo 'nameserver 10.74.4.2' > /etc/resolv.conf
 apt-get update
-apt-get install bind9 -y
-apt-get install apache2-utils -y
-apt-get install nginx -y
-apt-get install lynx -y
+apt-get install bind9 apache2-utils nginx lynx -y
 
 service nginx start
 ```
 
 Annie, Bertholdt, Reiner (Laravel Worker)
-```
+``` 
 -
 ```
 
@@ -229,22 +226,13 @@ Armin, Eren, Mikasa (PHP Worker)
 ```
 echo 'nameserver 10.74.4.2' > /etc/resolv.conf
 apt-get update
-apt-get install lynx -y
-apt-get install wget -y
-apt-get install unzip -y
-apt-get install nginx -y
-apt install software-properties-common -y
-apt install php7.3 -y
-apt install php7.3-fpm -y
+apt-get install lynx wget unzip nginx software-properties-common php7.3 php7.3-fpm -y
 ```
 
 Zeke & Erwin (Client)
 ```
 apt-get update
-apt-get install lynx -y
-apt-get install htop -y
-apt-get install apache2-utils -y
-apt-get install jq -y
+apt-get install lynx htop apache2-utils jq -y
 ```
 
 # Soal
@@ -286,7 +274,7 @@ Seiring berjalannya waktu kondisi semakin memanas, untuk bersiap perang. Kaum El
 5. Selanjutnya coba tambahkan keamanan dengan konfigurasi autentikasi di Colossal dengan dengan kombinasi username: “arminannie” dan password: “jrkmyyy”, dengan yyy merupakan kode kelompok. Terakhir simpan file “htpasswd” nya di /etc/nginx/supersecret/ (10)
 Lalu buat untuk setiap request yang mengandung /titan akan di proxy passing menuju halaman https://attackontitan.fandom.com/wiki/Attack_on_Titan_Wiki (11) 
 hint: (proxy_pass)
-6. Selanjutnya Colossal ini hanya boleh diakses oleh client dengan IP [Prefix IP].1.77, [Prefix IP].1.88, [Prefix IP].2.144, dan [Prefix IP].2.156. (12) 
+6. Selanjutnya Colossal ini hanya boleh diakse s oleh client dengan IP [Prefix IP].1.77, [Prefix IP].1.88, [Prefix IP].2.144, dan [Prefix IP].2.156. (12) 
 hint: (fixed in dulu clientnya)
 
 ## No 13-20
