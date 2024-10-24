@@ -17,9 +17,13 @@
 	- [Set .bashrc](#set-bashrc)
 - [Soal](#soal)
 	- [No 0](#no-0)
+		- [Penyelesaian](#penyelesaian)
 	- [No 1-5](#no-1-5)
+		- [Penyelesaian](#penyelesaian-1)
 	- [No 6-12](#no-6-12)
+		- [Penyelesaian](#penyelesaian-2)
 	- [No 13-20](#no-13-20)
+		- [Penyelesaian](#penyelesaian-3)
 
 # Prerequisites
 
@@ -205,21 +209,6 @@ Fritz (DNS Server)
 echo 'nameserver 192.168.122.1' > /etc/resolv.conf
 apt-get update
 apt-get install bind9 -y
-
-echo 'options {
-        directory "/var/cache/bind";
-
-        forwarders {
-                192.168.122.1;
-        };
-
-        // dnssec-validation auto;
-        allow-query{any;};
-        auth-nxdomain no;
-        listen-on-v6 { any; };
-}; ' > /etc/bind/named.conf.options
-
-service bind9 restart
 ```
 
 Warhammer (Database Server)
@@ -263,6 +252,8 @@ Pulau Paradis dan Marley, sama-sama menghadapi ancaman besar dari satu sama lain
 Bangsa Marley, dipimpin oleh Zeke, telah mempersiapkan Annie, Bertholdt, dan Reiner untuk menyerang menggunakan Laravel Worker. Di sisi lain, Klan Eldia dari Paradis telah mempersiapkan Armin, Eren, dan Mikasa sebagai PHP Worker untuk mempertahankan pulau tersebut. Warhammer bertindak sebagai Database Server, sementara Beast dan Colossal sebagai Load Balancer. 
 
 Pulau Paradis telah menjadi tempat yang damai selama 1000 tahun, namun kedamaian tersebut tidak bertahan selamanya. Perang antara kaum Marley dan Eldia telah mencapai puncak. Kaum Marley yang dipimpin oleh Zeke, me-register domain name marley.yyy.com untuk worker Laravel mengarah pada Annie. Namun ternyata tidak hanya kaum Marley saja yang berinisiasi, kaum Eldia ternyata sudah mendaftarkan domain name eldia.yyy.com untuk worker PHP (0) mengarah pada Armin.
+
+### Penyelesaian
 
 **Script DNS Server - dnsserv.sh (Fritz)**
 
@@ -311,6 +302,19 @@ $TTL    604800
 @       IN      A       10.74.2.2     ; IP Armin
 www     IN      CNAME   eldia.it21.com.' > /etc/bind/sites/eldia.it21.com
 
+echo 'options {
+        directory "/var/cache/bind";
+
+        forwarders {
+                192.168.122.1;
+        };
+
+        // dnssec-validation auto;
+        allow-query{any;};
+        auth-nxdomain no;
+        listen-on-v6 { any; };
+}; ' > /etc/bind/named.conf.options
+
 service bind9 restart
 ```
 
@@ -330,6 +334,65 @@ Seiring berjalannya waktu kondisi semakin memanas, untuk bersiap perang. Kaum El
 |--|
 |danielcristh0/debian-buster:1.1|
 
+### Penyelesaian
+
+**Script DHCP Server - dhcpserv.sh (Tybur)**
+
+```
+echo '
+INTERFACESv4="eth0"
+INTERFACESv6=""
+' > /etc/default/isc-dhcp-server
+
+echo '
+subnet 10.74.1.0 netmask 255.255.255.0 {
+	range 10.74.1.5 10.74.1.25;
+	range 10.74.1.50 10.74.1.100;
+	option routers 10.74.1.1;
+	option broadcast-address 10.74.1.255;
+	option domain-name-servers 10.74.4.3;
+	default-lease-time 360;
+	max-lease-time 5220;
+}
+
+subnet 10.74.2.0 netmask 255.255.255.0 {
+	range 10.74.2.9 10.74.2.27;
+	range 10.74.2.81 10.74.2.243;
+	option routers 10.74.2.1;
+	option broadcast-address 10.74.1.255;
+	option domain-name-servers 10.74.4.3;
+	default-lease-time 1800;
+	max-lease-time 5220;
+}
+
+subnet 10.74.3.0 netmask 255.255.255.0 {
+	option routers 10.74.3.1;
+}
+
+subnet 10.74.4.0 netmask 255.255.255.0 {
+	option routers 10.74.4.1;
+}
+' > /etc/dhcp/dhcpd.conf
+
+service isc-dhcp-server restart
+```
+
+**Script DHCP Relay - dhcpserv.sh (Tybur)**
+
+```
+echo '
+SERVERS="10.74.4.2"
+INTERFACES="eth1 eth2 eth3 eth4"
+OPTIONS=""
+' > /etc/default/isc-dhcp-relay
+
+echo '
+net.ipv4.ip_forward=1
+' > /etc/sysctl.conf
+
+service isc-dhcp-relay restart
+```
+
 ## No 6-12
 
 1. Armin berinisiasi untuk memerintahkan setiap worker PHP untuk melakukan konfigurasi virtual host untuk website berikut https://intip.in/BangsaEldia dengan menggunakan php 7.3 (6)
@@ -346,6 +409,8 @@ Lalu buat untuk setiap request yang mengandung /titan akan di proxy passing menu
 hint: (proxy_pass)
 6. Selanjutnya Colossal ini hanya boleh diakse s oleh client dengan IP [Prefix IP].1.77, [Prefix IP].1.88, [Prefix IP].2.144, dan [Prefix IP].2.156. (12) 
 hint: (fixed in dulu clientnya)
+
+### Penyelesaian
 
 ## No 13-20
 
@@ -368,3 +433,5 @@ sebanyak tiga percobaan dan lakukan testing sebanyak 150 request dengan 15 reque
 PS:
 “laporan kerja Armin” dikumpulkan dalam bentuk PDF dengan format: yyy_LaporanArmin.pdf
 yyy merupakan kode kelompok
+
+### Penyelesaian
