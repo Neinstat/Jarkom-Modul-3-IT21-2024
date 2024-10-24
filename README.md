@@ -82,7 +82,7 @@
 | **Tybur**     | eth0          | 10.74.4.3     | 255.255.255.0      | 10.74.4.1    | Static                 |
 | **Zeke & Erwin** | eth0       | -             | -                  | -            | DHCP                   |
 
-**Paradis**
+**Paradis (Router & DHCP Relay)**
 ```
 # DHCP config for eth0
 auto eth0
@@ -109,7 +109,7 @@ iface eth4 inet static
 	netmask 255.255.255.0
 ```
 
-**Annie**
+**Annie (Laravel Worker)**
 ```
 auto eth0
 iface eth0 inet static
@@ -118,7 +118,7 @@ iface eth0 inet static
 	gateway 10.74.1.1
 ```
 
-**Berthold**
+**Berthold (Laravel Worker)**
 ```
 auto eth0
 iface eth0 inet static
@@ -127,7 +127,7 @@ iface eth0 inet static
 	gateway 10.74.1.1
 ```
 
-**Reiner**
+**Reiner (Laravel Worker)**
 ```
 auto eth0
 iface eth0 inet static
@@ -136,7 +136,7 @@ iface eth0 inet static
 	gateway 10.74.1.1
 ```
 
-**Armin**
+**Armin (PHP Worker)**
 ```
 auto eth0
 iface eth0 inet static
@@ -145,7 +145,7 @@ iface eth0 inet static
 	gateway 10.74.2.1
 ```
 
-**Eren**
+**Eren (PHP Worker)**
 ```
 auto eth0
 iface eth0 inet static
@@ -154,7 +154,7 @@ iface eth0 inet static
 	gateway 10.74.2.1
 ```
 
-**Mikasa**
+**Mikasa (PHP Worker)**
 ```
 auto eth0
 iface eth0 inet static
@@ -163,7 +163,7 @@ iface eth0 inet static
 	gateway 10.74.2.1
 ```
 
-**Beast**
+**Beast (Laravel LB)**
 ```
 auto eth0
 iface eth0 inet static
@@ -172,7 +172,7 @@ iface eth0 inet static
 	gateway 10.74.3.1
 ```
 
-**Colossal**
+**Colossal (PHP LB)**
 ```
 auto eth0
 iface eth0 inet static
@@ -181,7 +181,7 @@ iface eth0 inet static
 	gateway 10.74.3.1
 ```
 
-**Warhammer**
+**Warhammer (Database)**
 ```
 auto eth0
 iface eth0 inet static
@@ -190,7 +190,7 @@ iface eth0 inet static
 	gateway 10.74.3.1
 ```
 
-**Fritz**
+**Tybur (DHCP Server)**
 ```
 auto eth0
 iface eth0 inet static
@@ -199,7 +199,7 @@ iface eth0 inet static
 	gateway 10.74.4.1
 ```
 
-**Tybur**
+**Fritz (DNS Server)**
 ```
 auto eth0
 iface eth0 inet static
@@ -208,7 +208,7 @@ iface eth0 inet static
 	gateway 10.74.4.1
 ```
 
-**Zeke & Erwin**
+**Zeke & Erwin (Client)**
 ```
 auto eth0
 iface eth0 inet dhcp
@@ -216,7 +216,7 @@ iface eth0 inet dhcp
 
 ## Set .bashrc
 
-Paradis (DHCP Relay)
+**Paradis (DHCP Relay)**
 ```
 iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE -s 10.74.0.0/16
 apt-get update
@@ -224,7 +224,7 @@ apt-get install isc-dhcp-relay -y
 service isc-dhcp-relay start
 ```
 
-Tybur (DHCP Server)
+**Tybur (DHCP Server)**
 ```
 echo 'nameserver 10.74.4.2' > /etc/resolv.conf
 apt-get update
@@ -233,20 +233,20 @@ service isc-dhcp-server restart
 service isc-dhcp-server status
 ```
 
-Fritz (DNS Server)
+**Fritz (DNS Server)**
 ```
 echo 'nameserver 192.168.122.1' > /etc/resolv.conf
 apt-get update
 apt-get install bind9 -y
 ```
 
-Warhammer (Database Server)
+**Warhammer (Database Server)**
 ```
 apt-get update
 apt-get install mariadb-server -y
 ```
 
-Beast & Colossal (Load Balancer)
+**Beast & Colossal (Load Balancer)**
 ```
 echo 'nameserver 10.74.4.2' > /etc/resolv.conf
 apt-get update
@@ -255,19 +255,19 @@ apt-get install bind9 apache2-utils nginx -y
 service nginx start
 ```
 
-Annie, Bertholdt, Reiner (Laravel Worker)
+**Annie, Bertholdt, Reiner (Laravel Worker)**
 ``` 
 -
 ```
 
-Armin, Eren, Mikasa (PHP Worker)
+**Armin, Eren, Mikasa (PHP Worker)**
 ```
 echo 'nameserver 10.74.4.2' > /etc/resolv.conf
 apt-get update
 apt-get install lynx wget unzip nginx software-properties-common php7.3 php7.3-fpm -y
 ```
 
-Zeke & Erwin (Client)
+**Zeke & Erwin (Client)**
 ```
 apt-get update
 apt-get install lynx htop apache2-utils jq -y
@@ -295,7 +295,7 @@ echo 'zone "marley.it21.com" {
 zone "eldia.it21.com" {
         type master;
         file "/etc/bind/sites/eldia.it21.com";
-}; ' >> /etc/bind/named.conf.local
+}; ' > /etc/bind/named.conf.local
 
 mkdir -p /etc/bind/sites
 cp /etc/bind/db.local /etc/bind/sites/marley.it21.com
@@ -360,7 +360,7 @@ Lakukan konfigurasi sesuai dengan peta yang sudah diberikan. (1)
 Jauh sebelum perang dimulai, ternyata para keluarga bangsawan, Tybur dan Fritz, telah membuat kesepakatan sebagai berikut:
 1. Semua Client harus menggunakan konfigurasi ip address dari keluarga Tybur (dhcp). 
 2. Client yang melalui bangsa marley mendapatkan range IP dari [prefix IP].1.05 - [prefix IP].1.25 dan [prefix IP].1.50 - [prefix IP].1.100 (2)
-3. Client yang melalui bangsa eldia mendapatkan range IP dari [prefix IP].2.09 - [prefix IP].2.27 dan [prefix IP].2 .81 - [prefix IP].2.243 (3)
+3. Client yang melalui bangsa eldia **mendapatkan** range IP dari [prefix IP].2.09 - [prefix IP].2.27 dan [prefix IP].2 .81 - [prefix IP].2.243 (3)
 4. Client mendapatkan DNS dari keluarga Fritz dan dapat terhubung dengan internet melalui DNS tersebut (4)
 5. Dikarenakan keluarga Tybur tidak menyukai kaum eldia, maka mereka hanya meminjamkan ip address ke kaum eldia selama 6 menit. Namun untuk kaum marley, keluarga Tybur meminjamkan ip address selama 30 menit. Waktu maksimal dialokasikan untuk peminjaman alamat IP selama 87 menit. (5)
 
@@ -412,7 +412,7 @@ subnet 10.74.4.0 netmask 255.255.255.0 {
 service isc-dhcp-server restart
 ```
 
-**Script DHCP Relay - dhcpserv.sh (Tybur)**
+**Script DHCP Relay - dhcprelay.sh (Paradis)**
 
 ```bash
 echo '
