@@ -20,24 +20,27 @@
 		- [Penyelesaian](#penyelesaian)
 	- [No 1](#no-1)
 	- [No 2-5](#no-2-5)
-	- [Penyelesaian](#penyelesaian-1)
-	- [No 6-13](#no-6-13)
-		- [No 6](#no-6)
+		- [Penyelesaian](#penyelesaian-1)
+	- [No 6](#no-6)
 		- [Penyelesaian](#penyelesaian-2)
-		- [No 7](#no-7)
+	- [No 7](#no-7)
 		- [Penyelesaian](#penyelesaian-3)
-		- [No 8](#no-8)
+		- [Request Testing](#request-testing)
+	- [No 8](#no-8)
 		- [Penyelesaian](#penyelesaian-4)
-		- [No 9](#no-9)
+	- [No 9](#no-9)
 		- [Penyelesaian](#penyelesaian-5)
-		- [No 10](#no-10)
+	- [No 10](#no-10)
 		- [Penyelesaian](#penyelesaian-6)
-		- [No 11](#no-11)
+	- [No 11](#no-11)
 		- [Penyelesaian](#penyelesaian-7)
-		- [No 12](#no-12)
+	- [No 12](#no-12)
 		- [Penyelesaian](#penyelesaian-8)
-		- [No 13](#no-13)
+	- [No 13](#no-13)
 		- [Penyelesaian](#penyelesaian-9)
+		- [Menambahkan User](#menambahkan-user)
+		- [Akses dari Worker](#akses-dari-worker)
+	- [Extras](#extras)
 
 # Prerequisites
 
@@ -356,7 +359,7 @@ Seiring berjalannya waktu kondisi semakin memanas, untuk bersiap perang. Kaum El
 |--|
 |danielcristh0/debian-buster:1.1|
 
-## Penyelesaian
+### Penyelesaian
 
 **Script DHCP Server - dhcpserv.sh (Tybur)**
 
@@ -372,7 +375,7 @@ subnet 10.74.1.0 netmask 255.255.255.0 {
 	range 10.74.1.50 10.74.1.100;
 	option routers 10.74.1.1;
 	option broadcast-address 10.74.1.255;
-	option domain-name-servers 10.74.4.3;
+	option domain-name-servers 10.74.4.2;
 	default-lease-time 360;
 	max-lease-time 5220;
 }
@@ -382,7 +385,7 @@ subnet 10.74.2.0 netmask 255.255.255.0 {
 	range 10.74.2.81 10.74.2.243;
 	option routers 10.74.2.1;
 	option broadcast-address 10.74.1.255;
-	option domain-name-servers 10.74.4.3;
+	option domain-name-servers 10.74.4.2;
 	default-lease-time 1800;
 	max-lease-time 5220;
 }
@@ -417,9 +420,7 @@ service isc-dhcp-relay restart
 
 ![alt text](assets/no1-5.png)
 
-## No 6-13
-
-### No 6
+## No 6
 
 1. Armin berinisiasi untuk memerintahkan setiap worker PHP untuk melakukan konfigurasi virtual host untuk website berikut https://intip.in/BangsaEldia dengan menggunakan php 7.3 (6)
 
@@ -469,16 +470,114 @@ service nginx restart
 
 ![alt text](assets/no6.png)
 
-### No 7
+## No 7
 
 2. Dikarenakan Armin sudah mendapatkan kekuatan titan colossal, maka bantulah kaum eldia menggunakan colossal agar dapat bekerja sama dengan baik. Kemudian lakukan testing dengan 6000 request dan 200 request/second. (7)
 
 ### Penyelesaian
 
+**Script PHP LB - phplb.sh (Colossal)**
+
 ```bash
+cp /etc/nginx/sites-available/default /etc/nginx/sites-available/lb_php
+
+echo 'upstream worker {
+
+    #least_conn;
+    #ip_hash;
+
+    server 10.74.2.2;
+    server 10.74.2.3;
+    server 10.74.2.4;
+}
+
+server {
+    listen 80;
+    server_name eldia.it21.com www.eldia.it21.com;
+
+    root /var/www/html;
+
+    index index.html index.htm index.nginx-debian.html index.php;
+
+    server_name _;
+
+    location / {
+        proxy_pass http://worker;
+    }
+} ' > /etc/nginx/sites-available/lb_php
+
+ln -s /etc/nginx/sites-available/lb_php /etc/nginx/sites-enabled/
+rm /etc/nginx/sites-enabled/default
+
+service nginx restart
 ```
 
-### No 8
+**Script DNS Server - dnsserv.sh (Fritz)**
+
+```bash
+echo 'zone "marley.it21.com" { 
+        type master; 
+        file "/etc/bind/sites/marley.it21.com";
+};
+
+zone "eldia.it21.com" {
+        type master;
+        file "/etc/bind/sites/eldia.it21.com";
+}; ' > /etc/bind/named.conf.local
+
+mkdir -p /etc/bind/sites
+cp /etc/bind/db.local /etc/bind/sites/marley.it21.com
+cp /etc/bind/db.local /etc/bind/sites/eldia.it21.com
+
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     marley.it21.com. root.marley.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      marley.it21.com.
+@       IN      A       10.74.1.2     ; IP Annie
+www     IN      CNAME   marley.it21.com.' > /etc/bind/sites/marley.it21.com
+
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     eldia.it21.com. root.eldia.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      eldia.it21.com.
+@       IN      A       10.74.3.3     ; IP Colossal
+www     IN      CNAME   eldia.it21.com.' > /etc/bind/sites/eldia.it21.com
+
+echo 'options {
+        directory "/var/cache/bind";
+
+        forwarders {
+                192.168.122.1;
+        };
+
+        // dnssec-validation auto;
+        allow-query{any;};
+        auth-nxdomain no;
+        listen-on-v6 { any; };
+}; ' > /etc/bind/named.conf.options
+
+service bind9 restart
+```
+
+### Request Testing
+
+## No 8
 
 3. Karena Erwin meminta “laporan kerja Armin”, maka dari itu buatlah analisis hasil testing dengan 1000 request dan 75 request/second untuk masing-masing algoritma Load Balancer dengan ketentuan sebagai berikut:
 - Nama Algoritma Load Balancer
@@ -491,7 +590,7 @@ service nginx restart
 ```bash
 ```
 
-### No 9
+## No 9
 
 4. Dengan menggunakan algoritma Least-Connection, lakukan testing dengan menggunakan 3 worker, 2 worker, dan 1 worker sebanyak 1000 request dengan 10 request/second, kemudian tambahkan grafiknya pada “laporan kerja Armin”. (9)
 
@@ -500,45 +599,236 @@ service nginx restart
 ```bash
 ```
 
-### No 10
+## No 10
 
 5. Selanjutnya coba tambahkan keamanan dengan konfigurasi autentikasi di Colossal dengan dengan kombinasi username: “arminannie” dan password: “jrkmyyy”, dengan yyy merupakan kode kelompok. Terakhir simpan file “htpasswd” nya di /etc/nginx/supersecret/ (10)
 
 ### Penyelesaian
 
+**Script PHP LB - phplb.sh (Colossal)**
+
 ```bash
+mkdir -p /etc/nginx/supersecret
+htpasswd -b -c /etc/nginx/supersecret/htpasswd arminannie jrkmit21
+
+cp /etc/nginx/sites-available/default /etc/nginx/sites-available/lb_php
+
+echo 'upstream worker {
+
+    #least_conn;
+    #ip_hash;
+
+    server 10.74.2.2;
+    server 10.74.2.3;
+    server 10.74.2.4;
+}
+
+server {
+    listen 80;
+    server_name eldia.it21.com www.eldia.it21.com;
+
+    root /var/www/html;
+
+    index index.html index.htm index.nginx-debian.html index.php;
+
+    server_name _;
+
+    location / {
+        proxy_pass http://worker;
+    }
+
+	auth_basic "Restricted Content";
+    auth_basic_user_file /etc/nginx/supersecret/htpasswd;
+} ' > /etc/nginx/sites-available/lb_php
+
+ln -s /etc/nginx/sites-available/lb_php /etc/nginx/sites-enabled/
+rm /etc/nginx/sites-enabled/default
+
+service nginx restart
 ```
 
-### No 11
+## No 11
 
 6. Lalu buat untuk setiap request yang mengandung /titan akan di proxy passing menuju halaman https://attackontitan.fandom.com/wiki/Attack_on_Titan_Wiki (11) 
 hint: (proxy_pass)
 
 ### Penyelesaian
 
+**Script PHP LB - phplb.sh (Colossal)**
+
 ```bash
+mkdir -p /etc/nginx/supersecret
+htpasswd -b -c /etc/nginx/supersecret/htpasswd arminannie jrkmit21
+
+cp /etc/nginx/sites-available/default /etc/nginx/sites-available/lb_php
+
+echo 'upstream worker {
+
+    #least_conn;
+    #ip_hash;
+
+    server 10.74.2.2;
+    server 10.74.2.3;
+    server 10.74.2.4;
+}
+
+server {
+    listen 80;
+    server_name eldia.it21.com www.eldia.it21.com;
+
+    root /var/www/html;
+
+    index index.html index.htm index.nginx-debian.html index.php;
+
+    server_name _;
+
+    location / {
+        proxy_pass http://worker;
+    }
+
+	location /titan {
+        proxy_pass http://attackontitan.fandom.com;
+        proxy_set_header Host attackontitan.fandom.com;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+	
+	auth_basic "Restricted Content";
+    auth_basic_user_file /etc/nginx/supersecret/htpasswd;
+} ' > /etc/nginx/sites-available/lb_php
+
+ln -s /etc/nginx/sites-available/lb_php /etc/nginx/sites-enabled/
+rm /etc/nginx/sites-enabled/default
+
+service nginx restart
 ```
 
-### No 12
+## No 12
 
 7. Selanjutnya Colossal ini hanya boleh diakse s oleh client dengan IP [Prefix IP].1.77, [Prefix IP].1.88, [Prefix IP].2.144, dan [Prefix IP].2.156. (12) 
 hint: (fixed in dulu clientnya)
 
-
 ### Penyelesaian
+
+**Script PHP LB - phplb.sh (Colossal)**
+
+```bash
+mkdir -p /etc/nginx/supersecret
+htpasswd -b -c /etc/nginx/supersecret/htpasswd arminannie jrkmit21
+
+cp /etc/nginx/sites-available/default /etc/nginx/sites-available/lb_php
+
+echo 'upstream worker {
+
+    #least_conn;
+    #ip_hash;
+
+    server 10.74.2.2;
+    server 10.74.2.3;
+    server 10.74.2.4;
+}
+
+server {
+    listen 80;
+    server_name eldia.it21.com www.eldia.it21.com;
+
+    root /var/www/html;
+
+    index index.html index.htm index.nginx-debian.html index.php;
+
+    server_name _;
+
+    location / {
+		allow 10.74.1.77;
+        allow 10.74.1.88;
+        allow 10.74.2.144;
+        allow 10.74.2.156;
+        deny all;
+        proxy_pass http://worker;
+    }
+
+	location /titan {
+        proxy_pass http://attackontitan.fandom.com;
+        proxy_set_header Host attackontitan.fandom.com;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+	
+	auth_basic "Restricted Content";
+    auth_basic_user_file /etc/nginx/supersecret/htpasswd;
+} ' > /etc/nginx/sites-available/lb_php
+
+ln -s /etc/nginx/sites-available/lb_php /etc/nginx/sites-enabled/
+rm /etc/nginx/sites-enabled/default
+
+service nginx restart
+```
+
+**Script DHCP Server - dhcpserv.sh (Tybur)**
+
+Dilakukan agar IP Client fixed melalui MAC address. Untuk melakukan testing skenario akses melalui Client yang IPnya tidak di whitelist maka step ini bisa dihilangkan.
 
 ```bash
 ```
 
-### No 13
+## No 13
 
 Melihat perlawanan yang sengit dari kaum eldia, kaum marley pun memutar otak dan mengatur para worker di marley.
 1. Karena mengetahui bahwa ada keturunan marley yang mewarisi kekuatan titan, Zeke pun berinisiatif untuk menyimpan data data penting di Warhammer, dan semua data tersebut harus dapat diakses oleh anak buah kesayangannya, Annie, Reiner, dan Berthold. (13)
 
 ### Penyelesaian
 
+**Script Database - data.sh (Warhammer)**
+
 ```bash
+apt-get update
+apt-get install mariadb-server -y
+service mysql start
+
+echo '# This group is read both by the client and the server
+# use it for options that affect everything
+[client-server]
+
+# Import all .cnf files from configuration directory
+!includedir /etc/mysql/conf.d/
+!includedir /etc/mysql/mariadb.conf.d/
+
+# Options affecting the MySQL server (mysqld)
+[mysqld]
+skip-networking=0
+skip-bind-address
+' > /etc/mysql/my.cnf 
+
+sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mysql/mariadb.conf.d/50-server.cnf
+
+service mysql restart
 ```
+
+### Menambahkan User
+
+```
+mysql -u root -p
+Enter password: (kosong)
+```
+
+```mysql
+CREATE USER 'it21'@'%' IDENTIFIED BY 'it21';
+CREATE USER 'it21'@'localhost' IDENTIFIED BY 'it21';
+CREATE DATABASE db_it21;
+GRANT ALL PRIVILEGES ON *.* TO 'it21'@'%';
+GRANT ALL PRIVILEGES ON *.* TO 'it21'@'localhost';
+FLUSH PRIVILEGES;
+```
+
+### Akses dari Worker
+
+```
+mysql --host=192.245.3.2 --port=3306 --user=it21 --password=it21 db_it21 -e "SHOW DATABASES;"
+```
+
+## Extras
 
 PS:
 “laporan kerja Armin” dikumpulkan dalam bentuk PDF dengan format: yyy_LaporanArmin.pdf
