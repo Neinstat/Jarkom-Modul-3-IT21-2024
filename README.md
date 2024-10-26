@@ -21,7 +21,7 @@
 	- [No 1](#no-1)
 	- [No 2-5](#no-2-5)
 	- [Penyelesaian](#penyelesaian-1)
-	- [No 6-12](#no-6-12)
+	- [No 6-13](#no-6-13)
 		- [No 6](#no-6)
 		- [Penyelesaian](#penyelesaian-2)
 		- [No 7](#no-7)
@@ -36,23 +36,8 @@
 		- [Penyelesaian](#penyelesaian-7)
 		- [No 12](#no-12)
 		- [Penyelesaian](#penyelesaian-8)
-	- [No 13-20](#no-13-20)
 		- [No 13](#no-13)
 		- [Penyelesaian](#penyelesaian-9)
-		- [No 14](#no-14)
-		- [Penyelesaian](#penyelesaian-10)
-		- [No 15](#no-15)
-		- [Penyelesaian](#penyelesaian-11)
-		- [No 16](#no-16)
-		- [Penyelesaian](#penyelesaian-12)
-		- [No 17](#no-17)
-		- [Penyelesaian](#penyelesaian-13)
-		- [No 18](#no-18)
-		- [Penyelesaian](#penyelesaian-14)
-		- [No 19](#no-19)
-		- [Penyelesaian](#penyelesaian-15)
-		- [No 20](#no-20)
-		- [Penyelesaian](#penyelesaian-16)
 
 # Prerequisites
 
@@ -432,7 +417,7 @@ service isc-dhcp-relay restart
 
 ![alt text](assets/no1-5.png)
 
-## No 6-12
+## No 6-13
 
 ### No 6
 
@@ -545,8 +530,6 @@ hint: (fixed in dulu clientnya)
 ```bash
 ```
 
-## No 13-20
-
 ### No 13
 
 Melihat perlawanan yang sengit dari kaum eldia, kaum marley pun memutar otak dan mengatur para worker di marley.
@@ -557,63 +540,6 @@ Melihat perlawanan yang sengit dari kaum eldia, kaum marley pun memutar otak dan
 ```bash
 ```
 
-### No 14
-
-2. Annie, Reiner, dan Berthold memiliki Marley Channel sesuai dengan quest guide berikut. Jangan lupa melakukan instalasi PHP 8.0 dan Composer (14)
-
-### Penyelesaian
-
-```bash
-```
-
-### No 15
-
-3. Marley Channel memiliki beberapa endpoint yang harus ditesting sebanyak 120 request dengan 10 request/second. Annie diminta oleh Zeke untuk membuat laporan testing tersebut, namun karena satu dan dua hal, Annie berhasil diculik oleh SurveyCorps dan diinterogasi oleh Armin. Armin kemudian menambahkan hasil response dan hasil testing pada “laporan kerja Armin”.
-- POST /auth/register (15)
-
-### Penyelesaian
-
-### No 16
-
-- POST /auth/login (16)
-
-### Penyelesaian
-
-### No 17
-
-- GET /me (17)
-
-### Penyelesaian
-
-### No 18
-
-4. Setelah Annie berhasil kabur dari SurveyCorps, Annie kembali ke Reiner dan Bertholdt. Untuk memastikan ketiganya bekerja sama secara baik untuk mengatur Marley Channel maka implementasikan Proxy Bind pada Beast untuk mengaitkan IP dari Annie, Reiner, dan Berthold. (18)
-
-### Penyelesaian
-
-```bash
-```
-
-### No 19
-
-5. Untuk meningkatkan performa dari Worker, coba implementasikan PHP-FPM pada Annie, Reiner, dan Berthold. Untuk testing kinerja naikkan 
-- pm.max_children
-- pm.start_servers
-- pm.min_spare_servers
-- pm.max_spare_servers
-sebanyak tiga percobaan dan lakukan testing sebanyak 150 request dengan 15 request/second kemudian berikan hasil analisisnya pada “laporan kerja Armin”.(19)
-
-### Penyelesaian
-
-```bash
-```
-
-### No 20
-
-6. Nampaknya hanya menggunakan PHP-FPM tidak cukup untuk meningkatkan performa dari worker maka Zeke mengimplementasikan Least-Conn pada Beast. Untuk testing kinerja dari worker tersebut dilakukan sebanyak 200 request dengan 25 request/second. (20)
-
 PS:
 “laporan kerja Armin” dikumpulkan dalam bentuk PDF dengan format: yyy_LaporanArmin.pdf
 yyy merupakan kode kelompok
-
-### Penyelesaian
