@@ -262,7 +262,7 @@ apt-get install lynx curl unzip nginx software-properties-common php7.3 php7.3-f
 **Zeke & Erwin (Client)**
 ```
 apt-get update
-apt-get install lynx htop apache2-utils jq -y
+apt-get install lynx htop apache2-utils jq mariadb-client -y
 ```
 
 # Soal
