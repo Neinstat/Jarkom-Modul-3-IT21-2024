@@ -576,17 +576,20 @@ echo 'options {
 
 service bind9 restart
 ```
-
 ### Request Testing
 
-**Hasil** - 
+**Hasil**
+
+Testing Menggunakan Client (Erwin)
+![alt text](assets/no7.png)
 
 ## No 8
 
 3. Karena Erwin meminta “laporan kerja Armin”, maka dari itu buatlah analisis hasil testing dengan 1000 request dan 75 request/second untuk masing-masing algoritma Load Balancer dengan ketentuan sebagai berikut:
+
 - Nama Algoritma Load Balancer
 - Report hasil testing pada Apache Benchmark
-- Grafik request per second untuk masing masing algoritma. 
+- Grafik request per second untuk masing masing algoritma.
 - Analisis (8)
 
 PS:
@@ -595,7 +598,128 @@ yyy merupakan kode kelompok
 
 ### Penyelesaian
 
-**Hasil Analisis** - 
+**Script PHP LB - phplb.sh (Colossal)**
+
+```bash
+#!/bin/bash
+
+# Direktori untuk konfigurasi load balancing
+CONFIG_DIR="/etc/nginx/sites-available"
+ENABLED_DIR="/etc/nginx/sites-enabled"
+
+# Array server IP untuk load balancing
+SERVERS=("10.74.2.2" "10.74.2.3" "10.74.2.4")
+
+# Fungsi untuk menulis konfigurasi upstream pada file Nginx
+write_upstream() {
+    local name=$1
+    local algorithm=$2
+    local weights=("${!3}")
+    local config_file="$CONFIG_DIR/$name"
+
+    echo "upstream $name {" > "$config_file"
+    if [[ $algorithm == "round_robin" ]]; then
+        for server in "${SERVERS[@]}"; do
+            echo "    server $server;" >> "$config_file"
+        done
+    elif [[ $algorithm == "weighted" ]]; then
+        for i in "${!SERVERS[@]}"; do
+            echo "    server ${SERVERS[$i]} weight=${weights[$i]};" >> "$config_file"
+        done
+    elif [[ $algorithm == "ip_hash" ]]; then
+        echo "    ip_hash;" >> "$config_file"
+        for server in "${SERVERS[@]}"; do
+            echo "    server $server;" >> "$config_file"
+        done
+    elif [[ $algorithm == "least_conn" ]]; then
+        echo "    least_conn;" >> "$config_file"
+        for server in "${SERVERS[@]}"; do
+            echo "    server $server;" >> "$config_file"
+        done
+    elif [[ $algorithm == "generic_hash" ]]; then
+        echo "    hash \$request_uri consistent;" >> "$config_file"
+        for server in "${SERVERS[@]}"; do
+            echo "    server $server;" >> "$config_file"
+        done
+    fi
+    echo "}" >> "$config_file"
+}
+
+# Fungsi untuk membuat server block konfigurasi Nginx
+write_server_block() {
+    local name=$1
+    local port=$2
+    local config_file="$CONFIG_DIR/$name"
+
+    echo "
+    server {
+        listen $port;
+        root /var/www/html;
+        index index.html index.htm index.nginx-debian.html;
+        server_name _;
+
+        location / {
+            proxy_pass http://$name;
+        }
+    }
+    " >> "$config_file"
+}
+
+# Konfigurasi untuk setiap algoritma
+# 1. Round Robin
+write_upstream "round_robin" "round_robin" SERVERS[@]
+write_server_block "round_robin" 81
+
+# 2. Weighted Round Robin dengan bobot berbeda
+WEIGHTS=(3 2 1)
+write_upstream "weighted_round_robin" "weighted" WEIGHTS[@]
+write_server_block "weighted_round_robin" 82
+
+# 3. IP Hash
+write_upstream "ip_hash_lb" "ip_hash" SERVERS[@]
+write_server_block "ip_hash_lb" 83
+
+# 4. Least Connections
+write_upstream "least_connections_lb" "least_conn" SERVERS[@]
+write_server_block "least_connections_lb" 84
+
+# 5. Generic Hash
+write_upstream "generic_hash_lb" "generic_hash" SERVERS[@]
+write_server_block "generic_hash_lb" 85
+
+# Aktivasi semua konfigurasi load balancer
+ln -sf "$CONFIG_DIR/round_robin" "$ENABLED_DIR/"
+ln -sf "$CONFIG_DIR/weighted_round_robin" "$ENABLED_DIR/"
+ln -sf "$CONFIG_DIR/ip_hash_lb" "$ENABLED_DIR/"
+ln -sf "$CONFIG_DIR/least_connections_lb" "$ENABLED_DIR/"
+ln -sf "$CONFIG_DIR/generic_hash_lb" "$ENABLED_DIR/"
+
+# Restart Nginx untuk menerapkan konfigurasi baru
+service nginx restart
+
+echo "Konfigurasi Load Balancer berhasil diterapkan."
+```
+
+**Hasil Analisis**
+
+Round Robin
+![alt text](assets/no8-1.png)
+
+Weighted Round Robin
+![alt text](assets/no8-2.png)
+
+IP Hash
+![alt text](assets/no8-3.png)
+
+Least Connection
+![alt text](assets/no8-4.png)
+
+Generic Hash
+![alt text](assets/no8-5.png)
+
+**Grafik & Analisis**
+![alt text](assets/no8-grafik.png)
+Generic Hash unggul dalam jumlah permintaan per detik, tetapi pemilihan algoritma terbaik tergantung pada kebutuhan spesifik aplikasi, seperti distribusi beban yang merata, kapasitas server, atau persyaratan konsistensi klien.
 
 ## No 9
 
@@ -603,7 +727,89 @@ yyy merupakan kode kelompok
 
 ### Penyelesaian
 
-**Hasil Analisis** - 
+**Script Testing - script9.sh (Colossal)**
+
+```bash
+#!/bin/bash
+
+# Fungsi untuk mengonfigurasi Least-Connection dengan jumlah worker yang diinginkan
+configure_least_connection() {
+    local num_workers=$1
+
+    echo "Mengonfigurasi Least-Connection dengan $num_workers worker(s)..."
+
+    # Hapus konfigurasi sebelumnya
+    rm -f /etc/nginx/sites-available/least_connection
+
+    # Tulis ulang konfigurasi Least-Connection dengan jumlah worker sesuai parameter
+    echo "upstream least_connection {" > /etc/nginx/sites-available/least_connection
+    echo "    least_conn;" >> /etc/nginx/sites-available/least_connection
+
+    # Tambahkan server berdasarkan jumlah worker
+    for ((i = 1; i <= num_workers; i++)); do
+        server_ip="10.74.3.$i"  # Sesuaikan IP worker jika berbeda
+        echo "    server $server_ip;" >> /etc/nginx/sites-available/least_connection
+    done
+
+    echo "}" >> /etc/nginx/sites-available/least_connection
+
+    # Tambahkan server block
+    echo "
+    server {
+        listen 85;
+        root /var/www/html;
+
+        index index.html index.htm index.nginx-debian.html;
+
+        server_name _;
+
+        location / {
+            proxy_pass http://least_connection;
+        }
+    }
+    " >> /etc/nginx/sites-available/least_connection
+
+    # Restart Nginx untuk menerapkan konfigurasi baru
+    service nginx restart
+    echo "Konfigurasi dengan $num_workers worker(s) telah diterapkan."
+}
+
+# Pastikan user memberikan parameter jumlah worker
+if [ -z "$1" ]; then
+    echo "Silakan masukkan jumlah worker yang ingin digunakan, misalnya: ./least_connection_config.sh 2"
+    exit 1
+fi
+
+# Konfigurasi Least-Connection sesuai jumlah worker yang dimasukkan
+configure_least_connection "$1"
+
+# Petunjuk setelah konfigurasi berhasil
+echo "Konfigurasi selesai. Anda dapat menjalankan perintah berikut untuk testing:"
+echo "ab -n 1000 -c 10 http://localhost:85/"
+```
+
+Contoh Penggunaan
+
+```bash
+bash script9.sh 1 (jumlah worker)
+```
+
+**Hasil Analisis**
+
+1 Worker
+![alt text](assets/no9-1.png)
+
+2 Worker
+![alt text](assets/no9-2.png)
+
+3 Worker
+![alt text](assets/no9-3.png)
+
+**Grafik & Analisis**
+![alt text](assets/no9-grafik.png)
+Peningkatan jumlah worker pada algoritma Least-Connection meningkatkan kapasitas penanganan permintaan dan efisiensi, meskipun keuntungan marginal berkurang setelah dua worker.
+
+
 
 ## No 10
 
