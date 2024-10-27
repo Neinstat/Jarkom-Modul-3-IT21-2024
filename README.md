@@ -10,37 +10,36 @@
 ## Daftar Isi
 
 - [Jarkom-Modul-3-IT21-2024](#jarkom-modul-3-it21-2024)
-	- [Daftar Isi](#daftar-isi)
+  - [Daftar Isi](#daftar-isi)
 - [Prerequisites](#prerequisites)
-	- [Topologi](#topologi)
-	- [Konfigurasi](#konfigurasi)
-	- [Set .bashrc](#set-bashrc)
+  - [Topologi](#topologi)
+  - [Konfigurasi](#konfigurasi)
+  - [Set .bashrc](#set-bashrc)
 - [Soal](#soal)
-	- [No 0](#no-0)
-		- [Penyelesaian](#penyelesaian)
-	- [No 1](#no-1)
-	- [No 2-5](#no-2-5)
-		- [Penyelesaian](#penyelesaian-1)
-	- [No 6](#no-6)
-		- [Penyelesaian](#penyelesaian-2)
-	- [No 7](#no-7)
-		- [Penyelesaian](#penyelesaian-3)
-		- [Request Testing](#request-testing)
-	- [No 8](#no-8)
-		- [Penyelesaian](#penyelesaian-4)
-	- [No 9](#no-9)
-		- [Penyelesaian](#penyelesaian-5)
-	- [No 10](#no-10)
-		- [Penyelesaian](#penyelesaian-6)
-	- [No 11](#no-11)
-		- [Penyelesaian](#penyelesaian-7)
-	- [No 12](#no-12)
-		- [Penyelesaian](#penyelesaian-8)
-	- [No 13](#no-13)
-		- [Penyelesaian](#penyelesaian-9)
-		- [Menambahkan User](#menambahkan-user)
-		- [Akses dari Worker](#akses-dari-worker)
-	- [Extras](#extras)
+  - [No 0](#no-0)
+    - [Penyelesaian](#penyelesaian)
+  - [No 1](#no-1)
+  - [No 2-5](#no-2-5)
+    - [Penyelesaian](#penyelesaian-1)
+  - [No 6](#no-6)
+    - [Penyelesaian](#penyelesaian-2)
+  - [No 7](#no-7)
+    - [Penyelesaian](#penyelesaian-3)
+    - [Request Testing](#request-testing)
+  - [No 8](#no-8)
+    - [Penyelesaian](#penyelesaian-4)
+  - [No 9](#no-9)
+    - [Penyelesaian](#penyelesaian-5)
+  - [No 10](#no-10)
+    - [Penyelesaian](#penyelesaian-6)
+  - [No 11](#no-11)
+    - [Penyelesaian](#penyelesaian-7)
+  - [No 12](#no-12)
+    - [Penyelesaian](#penyelesaian-8)
+  - [No 13](#no-13)
+    - [Penyelesaian](#penyelesaian-9)
+    - [Menambahkan User](#menambahkan-user)
+    - [Akses dari Worker](#akses-dari-worker)
 
 # Prerequisites
 
@@ -247,7 +246,9 @@ service nginx start
 
 **Annie, Bertholdt, Reiner (Laravel Worker)**
 ``` 
--
+echo 'nameserver 192.245.4.2' > /etc/resolv.conf
+apt-get update
+apt-get install mariadb-client -y
 ```
 
 **Armin, Eren, Mikasa (PHP Worker)**
@@ -585,6 +586,10 @@ service bind9 restart
 - Grafik request per second untuk masing masing algoritma. 
 - Analisis (8)
 
+PS:
+“laporan kerja Armin” dikumpulkan dalam bentuk PDF dengan format: yyy_LaporanArmin.pdf
+yyy merupakan kode kelompok
+
 ### Penyelesaian
 
 ```bash
@@ -827,9 +832,3 @@ FLUSH PRIVILEGES;
 ```
 mysql --host=192.245.3.2 --port=3306 --user=it21 --password=it21 db_it21 -e "SHOW DATABASES;"
 ```
-
-## Extras
-
-PS:
-“laporan kerja Armin” dikumpulkan dalam bentuk PDF dengan format: yyy_LaporanArmin.pdf
-yyy merupakan kode kelompok
