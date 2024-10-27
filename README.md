@@ -2,8 +2,8 @@
 
 |Nama  | NRP |
 |--|--|
-| Nathan Kho Pancras | 5027221002 |
-| Muhammad Andrean Rizq Prasetio | 5027221052 |
+| Nathan Kho Pancras | 5027231002 |
+| Muhammad Andrean Rizq Prasetio | 5027231052 |
 
 **Deskripsi** - Pulau Paradis dan Marley, sama-sama menghadapi ancaman besar dari satu sama lain. Keduanya membangun infrastruktur pertahanan yang kuat untuk melindungi sistem vital mereka. Dengan strategi yang matang, mereka bersiap menghadapi serangan dan mempertahankan wilayah masing-masing.
 
