@@ -247,7 +247,7 @@ service nginx start
 
 **Annie, Bertholdt, Reiner (Laravel Worker)**
 ``` 
-echo 'nameserver 192.245.4.2' > /etc/resolv.conf
+echo 'nameserver 10.74.4.2' > /etc/resolv.conf
 apt-get update
 apt-get install mariadb-client -y
 ```
@@ -579,6 +579,8 @@ service bind9 restart
 
 ### Request Testing
 
+**Hasil** - 
+
 ## No 8
 
 3. Karena Erwin meminta “laporan kerja Armin”, maka dari itu buatlah analisis hasil testing dengan 1000 request dan 75 request/second untuk masing-masing algoritma Load Balancer dengan ketentuan sebagai berikut:
@@ -593,8 +595,7 @@ yyy merupakan kode kelompok
 
 ### Penyelesaian
 
-```bash
-```
+**Hasil Analisis** - 
 
 ## No 9
 
@@ -602,8 +603,7 @@ yyy merupakan kode kelompok
 
 ### Penyelesaian
 
-```bash
-```
+**Hasil Analisis** - 
 
 ## No 10
 
@@ -776,7 +776,7 @@ service nginx restart
 
 Dilakukan agar IP Client fixed melalui MAC address. Untuk melakukan testing skenario akses melalui Client yang IPnya tidak di whitelist maka step ini bisa dihilangkan.
 
-```bash
+```
 host Zeke {
     hardware ethernet 5a:41:9c:fe:54:9a;
     fixed-address 10.74.1.77;
