@@ -231,6 +231,7 @@ apt-get install bind9 -y
 
 **Warhammer (Database Server)**
 ```
+echo 'nameserver 10.74.4.2' > /etc/resolv.conf
 apt-get update
 apt-get install mariadb-server -y
 ```
@@ -776,6 +777,15 @@ service nginx restart
 Dilakukan agar IP Client fixed melalui MAC address. Untuk melakukan testing skenario akses melalui Client yang IPnya tidak di whitelist maka step ini bisa dihilangkan.
 
 ```bash
+host Zeke {
+    hardware ethernet 5a:41:9c:fe:54:9a;
+    fixed-address 10.74.1.77;
+}
+
+host Erwin {
+    hardware ethernet 1e:d2:13:56:20:b4;
+    fixed-address 10.74.2.156;
+}
 ```
 
 ## No 13
