@@ -840,5 +840,5 @@ FLUSH PRIVILEGES;
 ### Akses dari Worker
 
 ```
-mysql --host=192.245.3.2 --port=3306 --user=it21 --password=it21 db_it21 -e "SHOW DATABASES;"
+mysql --host=10.74.3.4 --port=3306 --user=it21 --password=it21 db_it21 -e "SHOW DATABASES;"
 ```
