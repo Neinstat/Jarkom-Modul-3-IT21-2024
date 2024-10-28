@@ -809,8 +809,6 @@ bash script9.sh 1 (jumlah worker)
 ![alt text](assets/no9-grafik.png)
 Peningkatan jumlah worker pada algoritma Least-Connection meningkatkan kapasitas penanganan permintaan dan efisiensi, meskipun keuntungan marginal berkurang setelah dua worker.
 
-
-
 ## No 10
 
 5. Selanjutnya coba tambahkan keamanan dengan konfigurasi autentikasi di Colossal dengan dengan kombinasi username: “arminannie” dan password: “jrkmyyy”, dengan yyy merupakan kode kelompok. Terakhir simpan file “htpasswd” nya di /etc/nginx/supersecret/ (10)
@@ -859,6 +857,10 @@ rm /etc/nginx/sites-enabled/default
 service nginx restart
 ```
 
+Lakukan Testing
+![alt text](assets/no10-1.png)
+![alt text](assets/no10-2.png)
+ 
 ## No 11
 
 6. Lalu buat untuk setiap request yang mengandung /titan akan di proxy passing menuju halaman https://attackontitan.fandom.com/wiki/Attack_on_Titan_Wiki (11) 
@@ -915,6 +917,8 @@ rm /etc/nginx/sites-enabled/default
 
 service nginx restart
 ```
+
+![alt text](assets/no11.png)
 
 ## No 12
 
@@ -1048,3 +1052,7 @@ FLUSH PRIVILEGES;
 ```
 mysql --host=10.74.3.4 --port=3306 --user=it21 --password=it21 db_it21 -e "SHOW DATABASES;"
 ```
+
+![alt text](assets/no13-1.png)
+![alt text](assets/no13-2.png)
+![alt text](assets/no13-3.png)
