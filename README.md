@@ -598,28 +598,7 @@ yyy merupakan kode kelompok
 
 ### Penyelesaian
 
-**Hasil Analisis**
-
-Round Robin
-![alt text](assets/no8-1.png)
-
-Weighted Round Robin
-![alt text](assets/no8-2.png)
-
-IP Hash
-![alt text](assets/no8-3.png)
-
-Least Connection
-![alt text](assets/no8-4.png)
-
-Generic Hash
-![alt text](assets/no8-5.png)
-
-**Grafik & Analisis**
-
-![alt text](assets/no8-grafik.png)
-
-Generic Hash unggul dalam jumlah permintaan per detik, tetapi pemilihan algoritma terbaik tergantung pada kebutuhan spesifik aplikasi, seperti distribusi beban yang merata, kapasitas server, atau persyaratan konsistensi klien.
+Hasil analisis: [Analysis.md](Analysis.md)
 
 ## No 9
 
@@ -627,22 +606,7 @@ Generic Hash unggul dalam jumlah permintaan per detik, tetapi pemilihan algoritm
 
 ### Penyelesaian
 
-**Hasil Analisis**
-
-1 Worker
-![alt text](assets/no9-1.png)
-
-2 Worker
-![alt text](assets/no9-2.png)
-
-3 Worker
-![alt text](assets/no9-3.png)
-
-**Grafik & Analisis**
-
-![alt text](assets/no9-grafik.png)
-
-Peningkatan jumlah worker pada algoritma Least-Connection meningkatkan kapasitas penanganan permintaan dan efisiensi, meskipun keuntungan marginal berkurang setelah dua worker.
+Hasil analisis: [Analysis.md](Analysis.md)
 
 ## No 10
 
@@ -832,6 +796,8 @@ host Erwin {
     fixed-address 10.74.2.156;
 }
 ```
+
+![alt text](assets/no12.png)
 
 ## No 13
 
